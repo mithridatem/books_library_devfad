@@ -11,8 +11,8 @@ class User
     private string $lastname;
     private string $email;
     private string $password;
-    private \DateTime $createdAt;
-    private ?\DateTime $updatedAt;
+    private \DateTimeImmutable $createdAt;
+    private ?\DateTimeImmutable $updatedAt;
     private ?string $imgProfil;
     private ?string $grant;
 
@@ -27,7 +27,7 @@ class User
         $this->lastname = $lastname;
         $this->email = $email;
         $this->password = $password;
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     //Getters et Setters
@@ -86,22 +86,22 @@ class User
         $this->password = $password;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): void
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTime $updatedAt): void
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
@@ -142,10 +142,11 @@ class User
             $user["email"],
             $user["password"]
         );
+        
         //Set des attributs
         $newUser->setId($user["id_user"] ?? null);
-        $newUser->setCreatedAt(new \DateTime($user["created_at"] ?? "") ?? null);
-        $newUser->setUpdatedAt(new \DateTime($user["updated_at"] ?? "") ?? null);
+        $newUser->setCreatedAt(new \DateTimeImmutable($user["created_at"] ?? "") ?? null);
+        $newUser->setUpdatedAt(new \DateTimeImmutable($user["updated_at"] ?? "") ?? null);
         $newUser->setImgProfil($user["img_profil"] ?? null);
         $newUser->setGrant($user["grant"] ?? null);
         

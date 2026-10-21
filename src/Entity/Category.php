@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Mithridatem\Validation\Attributes\Length;
+use Mithridatem\Validation\Attributes\NotBlank;
+
 class Category
 {
 <<<<<<< HEAD
@@ -40,9 +43,12 @@ class Category
 }
 =======
     private ?int $id;
-    private string $name;
 
-    public function __construct(string $name)
+    #[NotBlank]
+    #[Length(min: 2, max: 50)]
+    private ?string $name;
+
+    public function __construct(?string $name)
     {
         $this->name = $name;
     }
@@ -53,17 +59,17 @@ class Category
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
-    
+
     public function setId(?int $id): void
     {
         $this->id = $id;
     }
 
-    public function setName(string  $name): void
+    public function setName(?string  $name): void
     {
         $this->name = $name;
     }
@@ -72,10 +78,10 @@ class Category
     public static function hydrate(array $category): Category
     {
         //Instance de la category
-        $newCategory = new Category($category["category_name"]);
+        $newCategory = new Category($category["category_name"] ?? null);
 
         //test si categoryId existe
-        if(isset($category["id"])) {
+        if (isset($category["id"])) {
             $newCategory->setId($category["id"]);
         }
         //retourner un objet Category

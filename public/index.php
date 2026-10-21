@@ -31,6 +31,12 @@ switch ($path) {
     case '/register':
         $userController->register();
         break;
+    case '/login':
+        $userController->login();
+        break;
+    case '/logout':
+        $userController->logout();
+        break;
     case '/category/new':
         $categoryController->addCategory();
         break;

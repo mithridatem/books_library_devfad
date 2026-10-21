@@ -6,7 +6,8 @@
         }
     },
     "require": {
-        "symfony/var-dumper": "^7.4",
-        "vlucas/phpdotenv": "^5.7"
+        "symfony/var-dumper": "*",
+        "vlucas/phpdotenv": "^5.7",
+        "mithridatem/validation": "^1.2"
     }
 }

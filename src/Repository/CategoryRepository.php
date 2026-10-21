@@ -5,75 +5,6 @@ namespace App\Repository;
 use App\Database\Mysql;
 use App\Entity\Category;
 
-<<<<<<< HEAD
-class CategoryRepository {
-    private \PDO $connection;
-
-    public function __construct()
-    {
-        $this->connection = Mysql::connectBdd();
-    }
-
-    // Méthode :
-    public function create(Category $category): ?Category {
-        try {
-            $sql = "INSERT INTO category (category_name) VALUE (?)";
-
-            $stmt = $this->connection->prepare($sql);
-
-            $stmt->bindValue(1, $category->getName(), \PDO::PARAM_STR);
-
-            $stmt->execute();
-
-            $id = $this->connection->lastInsertId();
-
-            $category->setId($id);
-
-        } catch (\PDOException $e) {
-            echo "Erreur : " . $e->getMessage();
-        }
-        return $category ?? null;
-    }
-
-    public function findByName(string $name): ?Category {
-        try {
-            $sql = "SELECT c.id_category, c.category_name FROM category AS c WHERE c.category_name = ?";
-
-            $stmt = $this->connection->prepare($sql);
-
-            $stmt->bindValue(1, $name, \PDO::PARAM_STR);
-
-            $stmt->execute();
-
-            $data = $stmt->fetch();
-
-            if ($data) {
-                $category = Category::hydrate($data);
-            }
-        } catch (\PDOException $e) {
-            echo "Erreur : " . $e->getMessage();
-        }
-
-        return $category ?? null;
-    }
-
-
-    public function findAll(): array
-    {
-        try {
-            $sql = "SELECT c.id_category, c.category_name FROM category AS c";
-
-            $stmt = $this->connection->prepare($sql);
-
-            $stmt->execute();
-
-            $answers = $stmt->fetchAll();
-
-            if ($answers) {
-                foreach ($answers as $answer) {
-                    $data[] = Category::hydrate($answer);
-                }
-=======
 class CategoryRepository
 {
     private \PDO $connexion;
@@ -117,7 +48,7 @@ class CategoryRepository
             $stmt->bindValue(1, $name, \PDO::PARAM_STR);
             $stmt->execute();
             $data = $stmt->fetch(\PDO::FETCH_ASSOC);
-           if (isset($data) && $data != false) {
+            if (isset($data) && $data != false) {
                 $category = Category::hydrate($data);
             }
         } catch(\PDOException $e) {
@@ -144,16 +75,10 @@ class CategoryRepository
             foreach ($data as $category) {
                 //Hydratation en Tableau d'objet
                 $categories[] = Category::hydrate($category);
->>>>>>> 9c0243437cb34a7e20e67ea9b957bbd31c897579
             }
         } catch (\PDOException $e) {
             echo "Erreur : " . $e->getMessage();
         }
-<<<<<<< HEAD
-
-        return $data ?? [];
-=======
         return $categories;
->>>>>>> 9c0243437cb34a7e20e67ea9b957bbd31c897579
     }
 }
