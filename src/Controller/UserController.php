@@ -39,7 +39,7 @@ class UserController extends AbstractController
         //Test si le formulaire est soumis
         if (isset($_POST["submit"])) {
             //Traitement de la connexion
-            $data["msg"] = $this->userService->connectUser();
+            $data = $this->userService->connectUser();
         }
         //Retourne la vue
         return $this->render('login', 'Connexion', $data ?? []);

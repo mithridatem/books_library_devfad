@@ -6,17 +6,21 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Utils\Tools;
 use App\Service\UploadService;
+use App\Entity\DTO\LoginDTO;
+use Mithridatem\Validation\Validator;
 
 class UserService
 {
     //Attribut
     private UserRepository $userRepository;
     private UploadService $upload;
+    private Validator $validator;
 
     public function __construct()
     {
         $this->userRepository = new UserRepository();
         $this->upload = new UploadService();
+        $this->validator = new Validator();
     }
 
     public function insertUser(): string
@@ -76,32 +80,36 @@ class UserService
         return "Le compte " . $_POST["email"] . " a été ajouté en BDD";
     }
 
-    public function connectUser(): string
+    public function connectUser(): array
     {
-        //Test si les champs sont remplis
-        if (empty($_POST["email"]) || empty($_POST["password"])) {
-            return "Veuillez remplir tous les champs";
-        }
-
-        //Nettoyage des entrées utilisateurs
+        $errors = [];
         Tools::sanitizeArray($_POST);
 
-        //Test si le mail est valide
-        if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-            return "Le format de l’email est invalide.";
+        $loginDTO = new LoginDTO(
+            $_POST["email"],
+            $_POST["password"]
+        );
+        
+        $errors_validation = $this->validator->validate($loginDTO);
+
+        if (!empty($errors_validation)) {
+            $errors["validation"] = $errors_validation;
+            return $errors;
         }
 
         //Récupération du compte
-        $user = $this->userRepository->findByEmail($_POST["email"]);
+        $user = $this->userRepository->findByEmail($loginDTO->email);
 
         //Test si le compte existe
         if (!$user) {
-            return "Les informations de connexion ne sont pas valides";
+            $errors["errors"] = "Les informations de connexion ne sont pas valides";
+            return $errors;
         }
 
         //Test si le mot de passe est valide
-        if (!password_verify($_POST["password"], $user->getPassword())) {
-            return "Les informations de connexion ne sont pas valides";
+        if (!password_verify($loginDTO->password, $user->getPassword())) {
+            $errors["errors"] = "Les informations de connexion ne sont pas valides";
+            return $errors;
         }
 
         //Renouvellement de l'id de session
@@ -115,8 +123,10 @@ class UserService
             "email" => $user->getEmail(),
             "grant" => $user->getGrant() ?? ""
         ];
+
+        $errors["success"] = "Connecté";
         header("Refresh:2; url=/");
-        return "Connexion réussie";
+        return $errors;
     }
 
     /**

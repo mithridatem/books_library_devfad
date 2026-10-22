@@ -1,0 +1,1 @@
+console.log("Fichier app.js chargé");

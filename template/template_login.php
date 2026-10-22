@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link
         rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">    
     <title><?= $title ?? "" ?></title>
 </head>
 
@@ -15,10 +15,17 @@
         <h1>Se connecter </h1>
         <form action="" method="post">
             <input type="email" name="email" placeholder="saisir votre email">
+            <?php foreach ($data["validation"]["email"] ?? [] as $error) : ?>
+                <p><?=  htmlspecialchars($error->message, ENT_QUOTES, 'UTF-8');  ?></p>
+            <?php endforeach ?>
             <input type="password" name="password" placeholder="saisir votre mot de passe">
+            <?php foreach ($data["validation"]["password"] ?? [] as $error) : ?>
+                <p><?=  htmlspecialchars($error->message, ENT_QUOTES, 'UTF-8');  ?></p>
+            <?php endforeach ?>
             <input type="submit" value="Connexion" name="submit">
         </form>
-        <p><?= htmlspecialchars($data["msg"] ?? "", ENT_QUOTES, 'UTF-8') ?></p>
+        <p><?= htmlspecialchars($data["errors"] ?? "", ENT_QUOTES, 'UTF-8') ?></p>
+        <p><?= htmlspecialchars($data["success"] ?? "", ENT_QUOTES, 'UTF-8') ?></p>
     </main>
 </body>
 
